@@ -32,16 +32,16 @@
                   :icon-size="iconSize"
                 >
                 </l-icon>
-                <!-- <l-tooltip
-                    :options="{
-                      permanent: true,
-                      interactive: true,
-                      opacity: 0.9,
-                      className: 'custom-tooltip',
-                    }"
-                  >
-                    {{ place.message || place.category }}
-                  </l-tooltip> -->
+                <l-tooltip
+                  :options="{
+                    permanent: true,
+                    interactive: true,
+                    opacity: 0.9,
+                    className: 'custom-tooltip',
+                  }"
+                >
+                  {{ place.message }}
+                </l-tooltip>
               </l-marker>
               <div v-for="(place, index) in places" :key="index">
                 <l-polyline
@@ -55,12 +55,6 @@
                 >
                 </l-polyline>
               </div>
-
-              <!-- <l-polyline
-                :lat-lngs="places.map((place) => [place.latitude, place.longitude])"
-                :options="lineDesign"
-                >
-              </l-polyline> -->
             </template>
           </l-map>
         </div>
@@ -81,9 +75,8 @@
 <script setup lang="ts">
 // general lib
 import { onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
 import 'leaflet/dist/leaflet.css'
-import { LMap, LTileLayer, LMarker, LIcon, LPolyline } from '@vue-leaflet/vue-leaflet'
+import { LMap, LTileLayer, LMarker, LIcon, LTooltip, LPolyline } from '@vue-leaflet/vue-leaflet'
 // unique lib
 import type { Marker } from '../types/marker'
 import { fetchMarkers } from '../services/getMarkers'
@@ -92,6 +85,7 @@ import { fetchMarkers } from '../services/getMarkers'
 interface Props {
   mode: string
   id: string
+  zoom: number
 }
 const props = withDefaults(defineProps<Props>(), {
   mode: '',
@@ -106,11 +100,6 @@ const centerID = ref(0)
 const iconSize = [10, 10]
 const inputLat = ref(0)
 const inputLon = ref(0)
-
-// path params
-const route = useRoute()
-const zoom = ref<number>(route.query.zoom ? Number(route.query.zoom) : 17)
-// const id = ref<string>(route.query.id ? String(route.query.id) : 'test001')
 
 // config
 const leafletMapOptions = {

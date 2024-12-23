@@ -4,7 +4,7 @@
       <v-col cols="12" lg="6" md="6" :style="{ height: isMobile ? '40vh' : '100vh' }">
         <l-map
           ref="map"
-          :zoom="zoom"
+          :zoom="props.zoom"
           :use-global-leaflet="false"
           :center="center"
           :options="leafletMapOptions"
@@ -49,7 +49,7 @@
               v-model="showMessage"
               closable
               close-label="Close Alert"
-              type="warning"
+              :type="alertType"
               variant="outlined"
               prominent
               @close="showMessage = false"
@@ -88,12 +88,12 @@ import { registerMarker } from '@/services/registerMarker'
 const center = ref([35.6769883, 139.7588499])
 const defaultLocation = { latitude: 0, longitude: 0 }
 const selectedLocation = ref<{ latitude: number; longitude: number }>(defaultLocation)
-const zoom = ref(16)
 const leafletMapOptions = { doubleClickZoom: false }
 const selectedColor = ref(`#${Math.floor(Math.random() * 16777215).toString(16)}`)
 const isMobile = ref(window.innerWidth < 768)
 const showMessage = ref(false)
 const message = ref('')
+const alertType = ref<'error' | 'success' | 'warning' | 'info'>('info')
 const swatches = [
   ['FE4164', '#FF1818', '#CCCCCC'],
   ['#FF2603', '#C3732A', '#F6890A'],
@@ -106,10 +106,12 @@ const swatches = [
 interface Props {
   mode: string
   id: string
+  zoom: number
 }
 const props = withDefaults(defineProps<Props>(), {
   mode: '',
   id: 'test',
+  zoom: 15,
 })
 
 // function
@@ -145,8 +147,9 @@ function getLocation() {
   }
 }
 
-function updateMessage(text: string) {
+function updateMessage(type: 'error' | 'success' | 'warning' | 'info', text: string) {
   message.value = text
+  alertType.value = type
   showMessage.value = true
   setTimeout(() => {
     showMessage.value = false
@@ -154,11 +157,12 @@ function updateMessage(text: string) {
 }
 async function registerLocation() {
   console.log('register!')
-  if (selectedLocation.value !== defaultLocation) {
+  if (selectedLocation.value.latitude !== 0 && selectedLocation.value.longitude !== 0) {
     await registerMarker({ ...selectedLocation.value, color: selectedColor.value }, props.id)
-    updateMessage('マーカーが正常に登録されました')
+    updateMessage('success', 'マーカーが正常に登録されました')
   } else {
     updateMessage(
+      'warning',
       '位置情報が指定されていません。地図上をクリックするか、ボタンから位置情報を指定してください。',
     )
   }
