@@ -1,0 +1,16 @@
+{
+  "name": "GiftRoute",
+  "short_name": "GRoute",
+  "description": "アプリの説明文",
+  "icons": [
+    {
+      "src": "src/assets/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "fullscreen",
+  "theme_color": "black",
+  "background_color": "black"
+}
