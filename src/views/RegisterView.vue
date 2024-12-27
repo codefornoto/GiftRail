@@ -275,11 +275,13 @@ function updateMessage(type: 'error' | 'success' | 'warning' | 'info', text: str
   }, 5000)
 }
 async function registerLocation() {
-  console.log('register!')
   if (selectedLocation.value.latitude !== 0 && selectedLocation.value.longitude !== 0) {
     const lat = selectedLocation.value.latitude + getRandomOffset()
     const long = selectedLocation.value.longitude + getRandomOffset()
-    await registerMarker({ latitude: lat, longitude: long, color: selectedColor.value }, props.id)
+    await registerMarker(
+      { latitude: lat, longitude: long, color: selectedColor.value, user: inputUsername.value },
+      props.id,
+    )
     updateMessage('success', 'マーカーが正常に登録されました')
   } else {
     updateMessage(
