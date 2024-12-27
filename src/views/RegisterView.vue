@@ -10,7 +10,7 @@
             :center="center"
             :options="leafletMapOptions"
             @click="moveMarker"
-            :style="{ height: isMobile ? '70vh' : '80vh' }"
+            :style="{ height: isMobile ? '45vh' : '80vh' }"
           >
             <l-tile-layer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -92,17 +92,26 @@
           <v-card
             title="場所を登録する"
             subtitle="自分の場所を登録して次の人に繋げよう"
-            :style="{ height: isMobile ? '55vh' : '45vh' }"
+            :style="{ height: isMobile ? '63vh' : '45vh' }"
           >
             <v-card-text>
               <v-row>
                 <v-col cols="12" md="6">
                   <v-row>
-                    <v-col class="my-0">
+                    <v-col class="pb-0">
                       <v-text-field
                         v-model="inputUsername"
                         variant="outlined"
                         label="ニックネームを入力"
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="py-0">
+                      <v-text-field
+                        v-model="inputMessage"
+                        variant="outlined"
+                        label="メッセージを入力"
                       />
                     </v-col>
                   </v-row>
@@ -189,6 +198,7 @@ const message = ref('')
 const alertType = ref<'error' | 'success' | 'warning' | 'info'>('info')
 const markers = ref<Marker[]>([])
 const inputUsername = ref('')
+const inputMessage = ref('')
 const centerID = ref(0)
 const swatches = [
   ['FE4164', '#FF1818', '#CCCCCC'],
