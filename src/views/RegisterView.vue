@@ -289,7 +289,13 @@ async function registerLocation() {
     const lat = selectedLocation.value.latitude + getRandomOffset()
     const long = selectedLocation.value.longitude + getRandomOffset()
     await registerMarker(
-      { latitude: lat, longitude: long, color: selectedColor.value, user: inputUsername.value },
+      {
+        latitude: lat,
+        longitude: long,
+        color: selectedColor.value,
+        user: inputUsername.value,
+        message: inputMessage.value,
+      },
       props.id,
     )
     updateMessage('success', 'マーカーが正常に登録されました')
