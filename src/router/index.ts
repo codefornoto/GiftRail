@@ -7,7 +7,7 @@ import TopView from '@/views/TopView.vue'
 const getProps = (route: RouteLocationNormalized) => ({
   mode: route.query.mode,
   id: route.query.id,
-  zoom: 15,
+  zoom: route.query.zoom ?? 14,
 })
 
 const router = createRouter({
