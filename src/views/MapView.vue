@@ -1,6 +1,8 @@
 <template>
+  <div v-if="loading" class="lottie-container">
+    <Vue3Lottie :animationData="animationLogo" height="40vh" />
+  </div>
   <v-container fluid class="pa-0 container-wrapper">
-    <v-app-bar-nav-icon class="menu-button" @click="openMenu"></v-app-bar-nav-icon>
     <v-row class="ma-0">
       <v-col class="pa-0">
         <div :style="{ height: mode === `admin` ? '50vh' : '100vh' }">
@@ -22,16 +24,13 @@
             <l-marker :lat-lng="[Number(inputLat), Number(inputLon)]"> </l-marker>
 
             <template>
-              <l-marker
+              <l-circle
                 v-for="place in places"
                 :key="place.id"
                 :lat-lng="[place.latitude, place.longitude]"
+                :radius="250"
+                :options="{ color: place.color }"
               >
-                <l-icon
-                  icon-url="https://codefornoto.github.io/images/map.png"
-                  :icon-size="iconSize"
-                >
-                </l-icon>
                 <l-tooltip
                   :options="{
                     permanent: true,
@@ -42,7 +41,7 @@
                 >
                   {{ place.message }}
                 </l-tooltip>
-              </l-marker>
+              </l-circle>
               <div v-for="(place, index) in places" :key="index">
                 <l-polyline
                   :lat-lngs="[
@@ -64,7 +63,7 @@
       <v-btn @click="backMarker">back</v-btn>
       <v-btn @click="nextMarker">forward</v-btn>
     </div>
-    <v-row>
+    <v-row v-show="mode === `admin`">
       <v-col> centerID : {{ centerID }} </v-col>
       <v-col> places.length : {{ places.length }} </v-col>
       <v-col> {{ places }}</v-col>
@@ -76,10 +75,19 @@
 // general lib
 import { onMounted, ref, watch } from 'vue'
 import 'leaflet/dist/leaflet.css'
-import { LMap, LTileLayer, LMarker, LIcon, LTooltip, LPolyline } from '@vue-leaflet/vue-leaflet'
+import {
+  LMap,
+  LTileLayer,
+  LMarker,
+  LIcon,
+  LCircle,
+  LTooltip,
+  LPolyline,
+} from '@vue-leaflet/vue-leaflet'
 // unique lib
 import type { Marker } from '../types/marker'
 import { fetchMarkers } from '../services/getMarkers'
+import animationLogo from '../assets/map.json'
 
 // propsの定義
 interface Props {
@@ -93,6 +101,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 // const
+const loading = ref(true)
 const places = ref<Marker[]>([])
 const windowSize = ref(12)
 const center = ref([37.2873438018384, 136.769464758692])
@@ -159,10 +168,13 @@ watch(
 onMounted(async () => {
   await getMarker(props.id)
   moveCenter([places.value[0].latitude, places.value[0].longitude])
+  setTimeout(() => {
+    loading.value = false
+  }, 500)
 })
 </script>
 
-<style scoped>
+<style>
 .container-wrapper {
   position: relative;
 }
@@ -189,5 +201,18 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   height: 100vh; /* 画面全体をカバー */
+}
+
+.leaflet-interactive {
+  animation: blink 3s ease-in-out infinite alternate both;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>
