@@ -1,7 +1,6 @@
 <template>
-  <v-row>
-    <v-col cols="12">
-      <h3>GiftRaliに関する利用規約</h3>
+  <v-card title="GiftRaliに関する利用規約" style="max-height: 60vh">
+    <v-card-text style="max-height: 40vh; overflow-y: auto">
       <p>
         「あげる」でつなぐアートGiftRali（以下、当サービス）についての利用規約をよく読み、同意する場合はチェックを入れたうえで送信ボタンを押下してください。
         <br /><br />
@@ -32,21 +31,39 @@
         <br />
         ・未成年者が当サービスを利用する場合は、必ず保護者の同意を得てください。
       </p>
-    </v-col>
-    <v-col cols="12" class="d-flex justify-center py-0">
+    </v-card-text>
+  </v-card>
+  <v-row>
+    <v-col cols="12" class="d-flex justify-center pb-0">
       <v-checkbox v-model="agreed" label="利用規約に同意します"></v-checkbox>
     </v-col>
-    <v-col cols="12" class="d-flex justify-center pt-0">
-      <router-link :to="{ name: 'register', query: { id: inputID } }">
-        <v-btn :disabled="!agreed" color="green" class="mb-4">同意する</v-btn>
+    <v-col cols="12" class="d-flex justify-center py-0">
+      <router-link :to="{ name: 'register', query: props }">
+        <v-btn :disabled="!agreed" color="green" class="mb-4" @click="saveAgreed()">同意する</v-btn>
       </router-link>
     </v-col>
   </v-row>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import type { QueryParams } from '@/interfaces/queryParams'
+import { useRouter } from 'vue-router'
 
-const inputID = ref('test')
 const agreed = ref(false)
+const props = defineProps<QueryParams>()
+const router = useRouter()
+
+// localStorageから値を取得
+onMounted(() => {
+  const storedAgreed = localStorage.getItem('agreed')
+  if (storedAgreed && props.mode !== 'admin') {
+    router.push({ name: 'register', query: props })
+  }
+})
+
+// agreedの値をlocalStorageに保存する関数
+const saveAgreed = () => {
+  localStorage.setItem('agreed', JSON.stringify(agreed.value))
+}
 </script>

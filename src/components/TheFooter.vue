@@ -1,7 +1,10 @@
 <template>
   <v-footer color="" elevation="2">
     <v-row>
-      <v-col> 2024 (c) Code for Noto </v-col>
+      <v-col>
+        運営会社:
+        <a href="https://www.code4noto.com/">一般社団法人Code for Noto</a>
+      </v-col>
     </v-row>
   </v-footer>
 </template>

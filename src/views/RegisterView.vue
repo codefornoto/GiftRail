@@ -1,6 +1,9 @@
 <template>
   <v-main>
-    <v-container fluid class="ma-0">
+    <div v-if="loading" class="lottie-container">
+      <Vue3Lottie :animationData="animationLogo" height="40vh" />
+    </div>
+    <v-container v-else fluid class="ma-0">
       <v-row>
         <v-col cols="12" md="6">
           <l-map
@@ -185,8 +188,12 @@ import { fetchMarkers } from '@/services/getMarkers'
 import TheHistory from '@/components/TheHistory.vue'
 import { mdiArrowLeftThin } from '@mdi/js'
 import { mdiArrowRightThin } from '@mdi/js'
+import { Vue3Lottie } from 'vue3-lottie'
+import animationLogo from '../assets/map.json'
+import type { QueryParams } from '@/interfaces/queryParams'
 
 // const
+const loading = ref(true)
 const center = ref([35.6769883, 139.7588499])
 const defaultLocation = { latitude: 0, longitude: 0 }
 const selectedLocation = ref<{ latitude: number; longitude: number }>(defaultLocation)
@@ -214,17 +221,7 @@ const lineDesign = {
   // dashArray: '5, 10', // 点線（5pxの線、10pxの隙間）
 }
 
-// props
-interface Props {
-  mode: string
-  id: string
-  zoom: number
-}
-const props = withDefaults(defineProps<Props>(), {
-  mode: '',
-  id: 'test',
-  zoom: 11,
-})
+const props = defineProps<QueryParams>()
 
 // function
 function nextMarker() {
@@ -324,7 +321,10 @@ watch(
   },
 )
 onMounted(async () => {
-  await getMarkers('test')
+  setTimeout(() => {
+    loading.value = false
+  }, 3000)
+  await getMarkers(props.id)
   moveCenter([markers.value[0].latitude, markers.value[0].longitude])
 })
 </script>

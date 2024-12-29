@@ -88,7 +88,6 @@ import {
 import type { Marker } from '../types/marker'
 import { fetchMarkers } from '../services/getMarkers'
 import animationLogo from '../assets/map.json'
-const loading = ref(true)
 
 // propsの定義
 interface Props {
@@ -102,6 +101,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 // const
+const loading = ref(true)
 const places = ref<Marker[]>([])
 const windowSize = ref(12)
 const center = ref([37.2873438018384, 136.769464758692])
