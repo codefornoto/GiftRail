@@ -10,12 +10,7 @@
 <script setup lang="ts">
 import InstructionApp from '@/components/InstructionApp.vue'
 import TermsOfService from '@/components/TermsOfService.vue'
+import type { QueryParams } from '@/interfaces/queryParams'
 
-// propsの定義
-interface Props {
-  mode: string
-  id: string
-  zoom: number
-}
-const props = defineProps<Props>()
+const props = defineProps<QueryParams>()
 </script>

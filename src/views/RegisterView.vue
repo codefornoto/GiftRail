@@ -8,7 +8,7 @@
         <v-col cols="12" md="6">
           <l-map
             ref="map"
-            :zoom="props.zoom"
+            :zoom="Number(props.zoom)"
             :use-global-leaflet="false"
             :center="center"
             :options="leafletMapOptions"

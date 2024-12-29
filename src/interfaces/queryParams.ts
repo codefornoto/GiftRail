@@ -1,7 +1,7 @@
 interface QueryParams {
   mode: string
   id: string
-  zoom: number
+  zoom: string
 }
 
 export type { QueryParams }
