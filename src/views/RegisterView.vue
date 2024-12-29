@@ -191,6 +191,7 @@ import { mdiArrowRightThin } from '@mdi/js'
 import { Vue3Lottie } from 'vue3-lottie'
 import animationLogo from '../assets/map.json'
 import type { QueryParams } from '@/interfaces/queryParams'
+import router from '@/router'
 
 // const
 const loading = ref(true)
@@ -320,7 +321,12 @@ watch(
     }
   },
 )
+
 onMounted(async () => {
+  const storedAgreed = localStorage.getItem('agreed')
+  if (!storedAgreed) {
+    router.push({ name: 'top', query: props })
+  }
   setTimeout(() => {
     loading.value = false
   }, 3000)
